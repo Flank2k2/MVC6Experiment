@@ -1,79 +1,86 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"] - MVC6Experiment</title>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MVC6Experiment</title>
 
-        <environment names="Development">
-            <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-            <link rel="stylesheet" href="~/lib/bootstrap-touch-carousel/dist/css/bootstrap-touch-carousel.css" />
-            <link rel="stylesheet" href="~/css/site.css" />
-        </environment>
-        <environment names="Staging,Production">
-            <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/bootstrap/3.0.0/css/bootstrap.min.css"
-                  asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-                  asp-fallback-test-class="hidden" asp-fallback-test-property="visibility" asp-fallback-test-value="hidden" />
-            <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/bootstrap-touch-carousel/0.8.0/css/bootstrap-touch-carousel.css"
-                  asp-fallback-href="~/lib/bootstrap-touch-carousel/css/bootstrap-touch-carousel.css"
-                  asp-fallback-test-class="carousel-caption" asp-fallback-test-property="display" asp-fallback-test-value="none" />
-            <link rel="stylesheet" href="~/css/site.css" asp-file-version="true" />
-        </environment>
-    </head>
-    <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-controller="Home" asp-action="Index" class="navbar-brand">MVC6Experiment</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    </ul>
+    <environment names="Development,Staging,Production">
+        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+            <link rel="stylesheet" href="~/lib/bootstrap-touch-carousel/dist/css/bootstrap-touch-carousel.css" />*@
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/lib/metro/build/css/metro.css" >
+        <link rel="stylesheet" href="~/lib/metro/build/css/metro-icons.css">
+    </environment>
+
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="app-bar " data-role="appbar">
+            <a class="app-bar-element" asp-action="Index" asp-controller="Home">Home</a>
+
+            <span class="app-bar-divider"></span>
+            <ul class="app-bar-menu">
+                <li><a class="" asp-action="Templates" asp-controller="Home">Templates</a></li>
+            </ul>
+
+            <div class="app-bar-element place-right">
+                <a class="fg-white" id="show_settings"><span class="mif-cog"></span></a>
+            </div>
+
+            <span class="app-bar-divider"></span>
+
+            @*<div class="app-bar-element place-right">
+                    <span class="fg-white">@User.Identity.Name</span>
+                </div>*@
+
+            <div class="app-bar-element place-right">
+                <div class="input-control text" style="width:19em;" data-role="input">
+                    <input type="text">
+                    <button class="button"><span class="mif-search"></span></button>
                 </div>
             </div>
         </div>
-        <div class="container body-content">
+        @RenderSection("breadcrumb", required: false)
+        <div class="grid">
             @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; 2015 - MVC6Experiment</p>
-            </footer>
         </div>
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
 
-        <environment names="Development">
-            <script src="~/lib/jquery/dist/jquery.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-            <script src="~/lib/hammer.js/hammer.js"></script>
-            <script src="~/lib/bootstrap-touch-carousel/dist/js/bootstrap-touch-carousel.js"></script>
-        </environment>
-        <environment names="Staging,Production">
-            <script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
-                    asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                    asp-fallback-test="window.jQuery">
-            </script>
-            <script src="//ajax.aspnetcdn.com/ajax/bootstrap/3.0.0/bootstrap.min.js"
-                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-            </script>
-            <script src="//ajax.aspnetcdn.com/ajax/hammer.js/2.0.4/hammer.min.js"
-                    asp-fallback-src="~/lib/hammer.js/hammer.js"
-                    asp-fallback-test="window.Hammer">
-            </script>
-            <script src="//ajax.aspnetcdn.com/ajax/bootstrap-touch-carousel/0.8.0/js/bootstrap-touch-carousel.js"
-                    asp-fallback-src="~/lib/bootstrap-touch-carousel/dist/js/bootstrap-touch-carousel.js"
-                    asp-fallback-test="window.Hammer && window.Hammer.Instance">
-            </script>
-            <script src="~/js/site.js" asp-file-version="true"></script>
-        </environment>
+    <environment names="Development,Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/hammer.js/hammer.js"></script>
+        <script src="~/lib/metro/build/js/metro.js"></script>
+    </environment>
 
-        @RenderSection("scripts", required: false)
-    </body>
+    <script type="text/javascript">
+        //Make search case insensitive
+        jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function (arg) {
+            return function (elem) {
+                return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+            };
+        });
+
+        $(function () {
+            $(document).ajaxError(function (event, jqxhr, settings, exception) {
+                var data = jqxhr.responseJSON;
+                console.log(data);
+                console.log(exception);
+                $.Notify({
+                    caption: jqxhr.status,
+                    content: (data.Message) ? data.Message : data,
+                    icon: "<span class='mif-fire'></span>",
+                    type: 'alert'
+                });
+            });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
 </html>

@@ -13,19 +13,12 @@ namespace MVC6Experiment.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Templates()
         {
-            ViewData["Message"] = "Your application description page.";
-
+            ViewBag.Message = "This is the template page !!";
             return View();
         }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
+        
 
         public IActionResult Error()
         {
