@@ -21,22 +21,9 @@ namespace MVC6Experiment.Controllers
 
         public IActionResult Index()
         {
-            var tt = "TROLOLOL !!";
-            _logger.LogInformation("Enter index {var}", tt);
-
 
             return View();
         }
-
-        public IActionResult Templates()
-        {
-            ViewBag.Message = "This is the template page !!";
-
-
-
-            return View();
-        }
-
 
         public IActionResult Error()
         {

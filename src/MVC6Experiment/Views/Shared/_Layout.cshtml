@@ -6,14 +6,10 @@
     <title>@ViewData["Title"] - MVC6Experiment</title>
 
     <environment names="Development,Staging,Production">
-        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-            <link rel="stylesheet" href="~/lib/bootstrap-touch-carousel/dist/css/bootstrap-touch-carousel.css" />*@
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/lib/metro/build/css/metro.css" >
         <link rel="stylesheet" href="~/lib/metro/build/css/metro-icons.css">
     </environment>
-
-
 </head>
 <body>
 
@@ -23,7 +19,7 @@
 
             <span class="app-bar-divider"></span>
             <ul class="app-bar-menu">
-                <li><a class="" asp-action="Templates" asp-controller="Home">Templates</a></li>
+                <li><a class="" asp-action="Index" asp-controller="Template">Templates</a></li>
             </ul>
 
             <div class="app-bar-element place-right">
@@ -31,10 +27,6 @@
             </div>
 
             <span class="app-bar-divider"></span>
-
-            @*<div class="app-bar-element place-right">
-                    <span class="fg-white">@User.Identity.Name</span>
-                </div>*@
 
             <div class="app-bar-element place-right">
                 <div class="input-control text" style="width:19em;" data-role="input">
@@ -60,12 +52,12 @@
     </environment>
 
     <script type="text/javascript">
-        //Make search case insensitive
-        jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function (arg) {
-            return function (elem) {
-                return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-            };
-        });
+
+        //jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function (arg) {
+        //    return function (elem) {
+        //        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        //    };
+        //});
 
         $(function () {
             $(document).ajaxError(function (event, jqxhr, settings, exception) {

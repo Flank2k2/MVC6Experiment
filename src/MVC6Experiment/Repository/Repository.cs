@@ -102,7 +102,7 @@ namespace MVC6Experiment.Repository
 
         public IEnumerable<Template> GetAllTemplates()
         {
-            throw new NotImplementedException();
+            return _templates.Values;
         }
         public Template GetTemplate(String name)
         {

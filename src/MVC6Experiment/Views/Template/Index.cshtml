@@ -1,0 +1,37 @@
+﻿@model MVC6Experiment.ViewModel.IndexTemplateView
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumbs">
+        <li><a class="app-bar-element" asp-action="Index" asp-controller="Home">Home</a></li>
+        <li><a class="app-bar-element" asp-action="Index" asp-controller="Template">Templates</a></li>
+    </ul>
+}
+
+<div class="row">
+    <a  asp-action="New" asp-controller="Template" class="button right">New Template <span>tt</span></a>
+</div>
+<div class="row">
+    <div class="listview-outlook" data-role="listview">
+        <div class="list">
+
+            @if (Model.Templates.Count() == 0)
+            {
+                <div class="list-content">
+                    <span class="list-title">No Templates found.</span>
+                </div>
+            }
+
+            @foreach (var template in Model.Templates.OrderByDescending(tmp => tmp.CreationTime))
+            {
+                <div class="list-content">
+                    <span class="list-title">@template.Title</span>
+                    <span class="list-subtitle"><strong>Author:</strong>@template.Author  </span>
+                    <span class="list-subtitle"><strong>Creation Date:</strong>@template.CreationTime  </span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

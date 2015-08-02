@@ -27,7 +27,17 @@ namespace MVC6Experiment.Controllers
             var templates = _repository.GetAllTemplates();
             _logger.LogInformation("List all templates {count}",templates.Count());
 
-            return View(templates);
+            var model = new IndexTemplateView()
+            {
+                Templates = templates,
+            };
+
+            return View(model);
+        }
+
+        public IActionResult New()
+        {
+            return View();
         }
 
         public IActionResult Edit(String name)
@@ -40,7 +50,13 @@ namespace MVC6Experiment.Controllers
                 return HttpNotFound();
             }
 
-            return View(template);
+            var model = new TemplateView()
+            {
+                Template = template,
+            };
+
+
+            return View(model);
         }
 
         public IActionResult Save(TemplateView templateView)
@@ -53,6 +69,7 @@ namespace MVC6Experiment.Controllers
 
                 return RedirectToAction("Review", new { name = id });
             }
+            
             return View(templateView);
         }
 
@@ -66,7 +83,12 @@ namespace MVC6Experiment.Controllers
                 return HttpNotFound();
             }
 
-            return View(template);
+            var model = new TemplateView()
+            {
+                Template = template,
+            };
+
+            return View(model);
         }
     }
 }
