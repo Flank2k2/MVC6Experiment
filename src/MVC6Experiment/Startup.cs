@@ -13,6 +13,7 @@ using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.Runtime;
 using MVC6Experiment.Repository;
+using Serilog;
 
 namespace MVC6Experiment
 {
@@ -24,14 +25,25 @@ namespace MVC6Experiment
                 .AddJsonFile("config.json")
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+#if DNXCORE50
+                .WriteTo.TextWriter(Console.Out)
+#else
+                .WriteTo.Trace()
+                .WriteTo.RollingFile("log-{Date}.txt")
+#endif
+                .CreateLogger();
+
         }
 
         public IConfiguration Configuration { get; set; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
+            services.AddLogging();
             services.AddSingleton<IRepository, SimpleRepository>();
         }
 
@@ -39,7 +51,8 @@ namespace MVC6Experiment
         {
             loggerFactory.MinimumLevel = LogLevel.Information;
             loggerFactory.AddConsole();
-            
+            loggerFactory.AddSerilog();
+
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
