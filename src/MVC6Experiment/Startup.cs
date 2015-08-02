@@ -14,6 +14,10 @@ using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.Runtime;
 using MVC6Experiment.Repository;
 using Serilog;
+using System.IO;
+using AutoMapper;
+using MVC6Experiment.Model;
+using MVC6Experiment.ViewModel;
 
 namespace MVC6Experiment
 {
@@ -24,31 +28,40 @@ namespace MVC6Experiment
             var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddEnvironmentVariables();
+
             Configuration = builder.Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-#if DNXCORE50
-                .WriteTo.TextWriter(Console.Out)
-#else
-                .WriteTo.Trace()
-                .WriteTo.RollingFile("log-{Date}.txt")
-#endif
-                .CreateLogger();
-
+            Environment = appEnv;
         }
 
-        public IConfiguration Configuration { get; set; }
+        public IApplicationEnvironment Environment { get; set; }
+        public Microsoft.Framework.Configuration.IConfiguration Configuration { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
             services.AddLogging();
-            services.AddSingleton<IRepository, SimpleRepository>();
+
+            var tmplDirectory = Path.Combine(Environment.ApplicationBasePath, Configuration.Get("Data:TemplateDirectory"));
+            var tmplName = Path.Combine(Environment.ApplicationBasePath, Configuration.Get("Data:ClientFile"));
+
+            services.AddSingleton<IRepository>((IServiceProvider pr) =>
+            {
+                return new SimpleRepository(tmplDirectory, tmplName);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+#if DNXCORE50
+                            .WriteTo.TextWriter(Console.Out)
+#else
+                            .WriteTo.Trace()
+                .WriteTo.RollingFile("log-{Date}.txt")
+#endif
+            .CreateLogger();
+
             loggerFactory.MinimumLevel = LogLevel.Information;
             loggerFactory.AddConsole();
             loggerFactory.AddSerilog();
@@ -64,7 +77,6 @@ namespace MVC6Experiment
             }
 
             app.UseStaticFiles();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
