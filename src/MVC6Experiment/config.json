@@ -1,6 +1,10 @@
 {
   "Data": {
     "TemplateDirectory": "wwwroot\\content\\templates",
-    "ClientFile": "wwwroot\\content\\clients.csv" 
+    "ClientFile": "wwwroot\\content\\clients.csv"
+  },
+
+  "Template" :{
+    "Header": " { Company } Change control form"
   }
 }

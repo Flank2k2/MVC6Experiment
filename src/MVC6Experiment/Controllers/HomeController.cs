@@ -7,6 +7,8 @@ using Microsoft.Framework.Logging;
 using MVC6Experiment.Repository;
 using MVC6Experiment.ViewModel;
 using MVC6Experiment.Model;
+using MVC6Experiment.Service;
+using Microsoft.Framework.Configuration;
 
 namespace MVC6Experiment.Controllers
 {
@@ -14,11 +16,13 @@ namespace MVC6Experiment.Controllers
     {
         private ILogger _logger;
         private IRepository _repository;
+        private IConfiguration _configuration;
 
-        public HomeController(ILogger<HomeController> logger, IRepository repo)
+        public HomeController(ILogger<HomeController> logger, IRepository repo, IConfiguration conf)
         {
             _logger = logger;
             _repository = repo;
+            _configuration = conf;
         }
 
         public IActionResult Index()
@@ -39,6 +43,9 @@ namespace MVC6Experiment.Controllers
             _logger.LogInformation("Get template {id}", id);
 
             var templates = _repository.GetTemplate(id);
+
+            if (templates == null)
+                return HttpNotFound();
 
             _logger.LogInformation("Remove client data fields");
             foreach (var field in templates.Header.Fields)
@@ -73,12 +80,13 @@ namespace MVC6Experiment.Controllers
             {
                 var template = templateView.Template;
 
+                var filename = "ACC_" + template.Title.Replace(" ", "_") + DateTime.Now.Ticks + ".docx";
 
+                var converter = new DocumentService(_configuration);
+                var str = converter.GenerateTemplate(template);
+                str.Position = 0;
 
-
-
-
-                return RedirectToAction("Index");
+                return File(str, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", filename);
             }
 
             return View(templateView);

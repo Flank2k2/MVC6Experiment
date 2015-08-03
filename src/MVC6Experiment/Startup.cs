@@ -41,11 +41,15 @@ namespace MVC6Experiment
             services.AddMvc();
             services.AddLogging();
 
-            var tmplDirectory = Path.Combine(Environment.ApplicationBasePath, Configuration.Get("Data:TemplateDirectory"));
-            var tmplName = Path.Combine(Environment.ApplicationBasePath, Configuration.Get("Data:ClientFile"));
-
+            services.AddSingleton(_ => Configuration);
             services.AddSingleton<IRepository>((IServiceProvider pr) =>
             {
+                var tmplDirectory = Path.Combine(Environment.ApplicationBasePath, 
+                    Configuration.Get("Data:TemplateDirectory"));
+
+                var tmplName = Path.Combine(Environment.ApplicationBasePath,
+                    Configuration.Get("Data:ClientFile"));
+
                 return new SimpleRepository(tmplDirectory, tmplName);
             });
         }
