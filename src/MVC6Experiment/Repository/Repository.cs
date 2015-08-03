@@ -31,7 +31,7 @@ namespace MVC6Experiment.Repository
                     {
                         Hostname = tokens[0],
                         AddressIP = tokens[1],
-                        DisplayName = tokens[2],
+                        Name = tokens[2],
                         Environment = tokens[3],
                         URL = tokens[4],
                         DetailsURL = tokens[5],
@@ -94,9 +94,10 @@ namespace MVC6Experiment.Repository
         }
         public IEnumerable<Client> SearchClients(string hostname = "", string addressip = "", string name = "")
         {
-            return _clients.Values.Where(cl => cl.Hostname.ToLower() == hostname.ToLower() ||
-                                               cl.AddressIP.ToLower() == addressip.ToLower() ||
-                                               cl.DisplayName.ToLower() == name.ToLower());
+            //Bouh !!
+            return _clients.Values.Where(cl => (!String.IsNullOrWhiteSpace(hostname) && cl.Hostname.ToLower().Contains(hostname.ToLower())) ||
+                                               (!String.IsNullOrWhiteSpace(addressip) && cl.AddressIP.ToLower().Contains(addressip.ToLower())) ||
+                                               (!String.IsNullOrWhiteSpace(name) && cl.Name.ToLower().Contains(name.ToLower())));
 
         }
 

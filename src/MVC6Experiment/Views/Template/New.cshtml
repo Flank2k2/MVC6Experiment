@@ -1,1 +1,170 @@
-﻿
+﻿@model MVC6Experiment.ViewModel.TemplateView
+@{
+    ViewBag.Title = "New Template";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumbs">
+        <li><a class="app-bar-element" asp-action="Index" asp-controller="Home">Home</a></li>
+        <li><a class="app-bar-element" asp-action="Index" asp-controller="Template">Templates</a></li>
+        <li><a class="app-bar-element" href="#">New</a></li>
+    </ul>
+}
+
+<form asp-controller="Template" asp-action="Save" method="post" class="form-horizontal" role="form">
+
+    <div class="row align-right">
+        <button class="fg-white bg-blue button" value=""><span class="mif-checkmark"></span> Save Template</button>
+    </div>
+
+    @*<div asp-validation-summary="ValidationSummary.All" class="alert"></div>*@
+
+    <h3><input id="tmpl_title" type="text" asp-for="Template.Title" value="@Model.Template.Title" /></h3>
+    <div class="row">
+        <div class="panel bg-cyan" data-role="panel">
+            <div class="heading">
+                <span class="title">
+                    @Model.Template.Header.Title
+                    <input class="header_title" type="hidden" asp-for="@Model.Template.Header.Title"  value="@Model.Template.Header.Title" />
+                </span>
+            </div>
+            <div class="content">
+                @Html.EditorFor(m => m.Template.Header)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="panel bg-cyan" data-role="panel">
+            <div class="heading">
+                <span class="title">
+                    <input class="header_title" type="text" asp-for="@Model.Template.ChangeDescription.Title" value="@Model.Template.ChangeDescription.Title" />
+                </span>
+            </div>
+            <div class="content">
+                @Html.EditorFor(m => m.Template.ChangeDescription)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="panel bg-cyan" data-role="panel">
+            <div class="heading">
+                <span class="title">
+                    <input class="header_title" type="text" asp-for="@Model.Template.Monitoring.Title" value="@Model.Template.Monitoring.Title" />
+                </span>
+            </div>
+            <div class="content">
+                @Html.EditorFor(m => m.Template.Monitoring)
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+            var help = function () { alert("Do you need help?"); }
+            var options = {
+                helpButton: { handler: help },
+            };
+
+            $('.wmd-input').each(function (i, e) {
+                var id = e.id;
+                id = id.replace("wmd-input", "");
+                var oo = new Markdown.Converter();
+                new Markdown.Editor(oo, id, options).run();
+            });
+
+            $('.lnk_preview').on("click", function (evt) {
+                var link = $(this);
+                var id = link.data('panel');
+
+                if (link.text() == "Preview") {
+                    $("#" + id).removeClass("no-display");
+                    link.text("Hide");
+                } else {
+                    $("#" + id).addClass("no-display");
+                    link.text("Preview");
+                }
+                return false;
+            });
+
+            $('.header_title').on("click", function (evt) {
+                return false;
+            });
+
+
+            var formatSelectElement = function (data) {
+                return "" + data.text + "";
+            };
+
+            var processServers = function (data) {
+                return {
+                    results: $.map(data, function (val, i) {
+                        return {
+                            id: val.Hostname,
+                            text: val.Hostname + " - " + val.AddressIP
+                        }
+                    })
+                };
+            };
+
+            var processClients = function (data) {
+                return {
+                    results: $.map(data, function (val, i) {
+                        return {
+                            id: val.Name,
+                            text: val.Name
+                        }
+                    })
+                };
+            };
+
+            var searchClient = function (dt) {
+                return {
+                    //hostname: dt.term,
+                    //addressip: dt.term,
+                    name: dt.term
+                };
+            };
+
+            var searchServers = function (dt) {
+                return {
+                    hostname: dt.term,
+                    addressip: dt.term,
+                    name: dt.term
+                };
+            };
+
+            var config = {
+                url: "/api/clients",
+                dataType: 'json',
+                delay: 250,
+                type: "GET",
+                cache: true
+            };
+
+            config.processResults = processClients;
+            config.data = searchClient;
+            $(".clientSelect").select2({
+                ajax: config,
+                minimumInputLength: 3,
+                templateResult: formatSelectElement,
+                templateSelection: formatSelectElement
+            });
+
+            config.processResults = processServers;
+            config.data = searchServers;
+            $(".serverSelect").select2({
+                ajax: config,
+                minimumInputLength: 3,
+                templateResult: formatSelectElement,
+                templateSelection: formatSelectElement
+            });
+        });
+    </script>
+}

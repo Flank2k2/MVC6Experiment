@@ -17,11 +17,12 @@
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta5",
         "Serilog": "1.5.9",
         "Serilog.Framework.Logging": "1.0.0-beta-43",
-        "AutoMapper": "4.0.0-alpha1"
+        "AutoMapper": "4.0.0-alpha1",
+        "DocX": "1.0.0.13"
     },
 
     "commands": {
-        "web": "Microsoft.AspNet.Hosting --config hosting.ini"
+        "web": ""
     },
 
     "frameworks": {

@@ -1,0 +1,88 @@
+﻿@model MVC6Experiment.Model.Section
+
+@* Saussage factory !! Do not look !  *@
+
+@for (var i = 0; i < Model.Fields.Count; i++)
+{
+    @if (Model.Fields[i].Name.Contains("client") || Model.Fields[i].Name.Contains("server"))
+    {
+        <div class="input-control select-extra">
+            @*<input asp-for="Fields[i].Icon" type="hidden" value="@Model.Fields[i].Icon" />*@
+            <input asp-for="Fields[i].Name" type="hidden" value="@Model.Fields[i].Name" />
+            <input asp-for="Fields[i].DisplayName" type="hidden" value="@Model.Fields[i].DisplayName" />
+
+            <label asp-for="@Model.Fields[i].Value" for="@Model.Fields[i].Name">@Model.Fields[i].DisplayName:</label>
+
+            @if (Model.Fields[i].Name.Contains("client"))
+            {
+                <select style="display:none;" asp-for="@Model.Fields[i].Value" class="clientSelect" id="@Model.Fields[i].Name"></select>
+            }
+            else if (Model.Fields[i].Name.Contains("server"))
+            {
+                <select style="display:none;" asp-for="@Model.Fields[i].Value" class="serverSelect" id="@Model.Fields[i].Name" multiple="multiple"></select>
+            }
+
+            <span asp-validation-for="Fields[i].Value"></span>
+        </div>
+    }
+    else if (Model.Fields[i].Name.Contains("txt"))
+    {
+        <div class="input-control textarea cell textarea-extra">
+            <input asp-for="Fields[i].Name" type="hidden" value="@Model.Fields[i].Name" />
+            <input asp-for="Fields[i].DisplayName" type="hidden" value="@Model.Fields[i].DisplayName" />
+
+            <label for="wmd-input-@Model.Fields[i].Name">@Model.Fields[i].DisplayName:</label>
+            <div class="wmd-panel">
+                <div class="wmd-button-bar" id="wmd-button-bar-@Model.Fields[i].Name"></div>
+                <textarea class="wmd-input" asp-for="Fields[i].Value" id="wmd-input-@Model.Fields[i].Name">@Model.Fields[i].Value</textarea>
+                <span asp-validation-for="Fields[i].Value"></span>
+            </div>
+            <div class="align-right">
+                <a href="#" class="lnk_preview" data-panel="wmd-preview-@Model.Fields[i].Name">Preview</a>
+            </div>
+            <div id="wmd-preview-@Model.Fields[i].Name" class="wmd-panel wmd-preview no-display"></div>
+        </div>
+    }
+    else if (Model.Fields[i].Name.Contains("date"))
+    {
+
+        <div class="input-control text cols" data-role="datepicker">
+            <input asp-for="Fields[i].Name" type="hidden" value="@Model.Fields[i].Name" />
+            <input asp-for="Fields[i].DisplayName" type="hidden" value="@Model.Fields[i].DisplayName" />
+
+            <label asp-for="@Model.Fields[i].Value" for="@Model.Fields[i].Name">@Model.Fields[i].DisplayName:</label>
+            <input id="@Model.Fields[i].Name" type="text" asp-for="@Model.Fields[i].Value" value="@Model.Fields[i].Value" />
+            <button class="button"><span class="mif-calendar"></span></button>
+        </div>
+
+    }
+    else
+    {
+        <div class="input-control text cols">
+            <input asp-for="Fields[i].Name" type="hidden" value="@Model.Fields[i].Name" />
+            <input asp-for="Fields[i].DisplayName" type="hidden" value="@Model.Fields[i].DisplayName" />
+
+            <label for="@Model.Fields[i].Name">@Model.Fields[i].DisplayName:</label>
+
+            @if (Model.Fields[i].Name.Contains("email"))
+            {
+                <input id="@Model.Fields[i].Name" type="email" asp-for="@Model.Fields[i].Value" value="@Model.Fields[i].Value" />
+            }
+            else if (Model.Fields[i].Name.Contains("time"))
+            {
+                <input id="@Model.Fields[i].Name" type="time" asp-for="@Model.Fields[i].Value" value="@(!String.IsNullOrWhiteSpace(Model.Fields[i].Value) ? Model.Fields[i].Value : "23:00")" />
+            }
+            @*else if (Model.Fields[i].Name.Contains("requestor"))
+                {
+                    <input id="@Model.Fields[i].Name" type="text" asp-for="@Model.Fields[i].Value" value="@User.Identity.Name" />
+                }*@
+            else
+            {
+                <input id="@Model.Fields[i].Name" asp-for="Fields[i].Value" type="text" value="@Model.Fields[i].Value" />
+            }
+
+            <span asp-validation-for="Fields[i].Value"></span>
+        </div>
+    }
+}
+

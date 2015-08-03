@@ -1,4 +1,5 @@
-﻿
+﻿@model MVC6Experiment.ViewModel.IndexTemplateView
+
 @{
     ViewBag.Title = "Home Page";
 }
@@ -10,241 +11,34 @@
 }
 
 
+<div class="row">
+    <div class="listview-outlook" data-role="listview" data-on-activate="list_click">
 
-@*
-    <div class="row">
-        <h3>@Model.Template.Title</h3>
-        <div class="panel bg-cyan" data-role="panel">
-            <div class="heading">
-                <span class="title">Client Information</span>
-            </div>
-            <div class="content">
-                @foreach (var row in Model.Template.Header.Fields.Values)
-                {
-                    switch (row.Type)
-                    {
-                        case FIELD_TYPE.APP_CLIENT:
-                            <div class="input-control select-extra">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                @*WTF ?!*
-                                <select style="display:none;" id="@row.Name"></select>
-                            </div>
-                            break;
-
-                        case FIELD_TYPE.APP_SERVER:
-                            <div class="input-control select-extra">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                @*WTF ?!
-                                <select style="display:none;" id="@row.Name" multiple="multiple"></select>
-                            </div>
-                            break;
-
-                        case FIELD_TYPE.APP_USER:
-                            <div class="input-control text cell colls2">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                <input id="@row.Name" readonly type="text" value="@row.Value" />
-                            </div>
-                            break;
-
-                        case FIELD_TYPE.APP_TYPE:
-                            <div class="input-control select colls2">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                <select id="@row.Name">
-                                    @foreach (var t in Enum.GetNames(typeof(TYPE)))
-                                    {
-                                        if (t == row.Value)
-                                        {
-                                            <option selected>@t</option>
-                                        }
-                                        else
-                                        {
-                                            <option>@t</option>
-                                        }
-                                    }
-                                </select>
-                            </div>
-                            break;
-
-                        case FIELD_TYPE.APP_SEVERITY:
-                            <div class="input-control select colls2">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                <select id="@row.Name">
-                                    @foreach (var t in Enum.GetNames(typeof(SEVERITY)))
-                                    {
-                                        if (t == row.Value)
-                                        {
-                                            <option selected>@t</option>
-                                        }
-                                        else
-                                        {
-                                            <option>@t</option>
-                                        }
-                                    }
-                                </select>
-                            </div>
-                            break;
-
-                        case FIELD_TYPE.EMAIL:
-                            <div class="input-control text cell colls2">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                <input id="@row.Name" type="email" value="@row.Value" />
-                            </div>
-                            break;
-
-                        case FIELD_TYPE.DATE:
-                            <div class="input-control text cell colls2" data-role="datepicker" data-preset="2015-05-01">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                <input id="@row.Name" type="text" />
-                                <button class="button"><span class="mif-calendar"></span></button>
-                            </div>
-                            break;
-
-                        case FIELD_TYPE.TIME:
-                            <div class="input-control text cell colls2">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                <input id="@row.Name" type="time" value="@row.Value" />
-                            </div>
-                            break;
-
-                        default:
-                        case FIELD_TYPE.TEXT:
-                        case FIELD_TYPE.UNKNOWN:
-                            <div class="input-control text cell colls2">
-                                <label for="@row.Name">@row.DisplayName:</label>
-                                <input id="@row.Name" type="text" value="@row.Value" />
-                            </div>
-                            break;
-
-                    }
-                }
-            </div>
-        </div>
-        @foreach (var table in Model.Template.Tables)
-        {
-
-            <div class="panel bg-cyan" data-role="panel">
-                <div class="heading">
-                    <span class="title">@table.Title</span>
-                </div>
-                <div class="content">
-                    @foreach (var row in @table.Fields.Values)
-                    {
-                        <div class="input-control textarea cell textcolls1">
-                            <label for="wmd-input-@row.Name">@row.DisplayName:</label>
-                            <div class="wmd-panel">
-                                <div class="wmd-button-bar" id="wmd-button-bar-@row.Name"></div>
-                                <textarea class="wmd-input" id="wmd-input-@row.Name">@row.Value</textarea>
-                            </div>
-                            <div id="wmd-preview-@row.Name" class="wmd-panel wmd-preview no-display"></div>
-                        </div>
-                    }
-                </div>
+        @if (Model.Templates.Count() == 0)
+            {
+            <div class="list-content">
+                <span class="list-title">No Templates found.</span>
             </div>
         }
 
-
+        @foreach (var template in Model.Templates.OrderByDescending(tmp => tmp.CreationTime))
+            {
+            <a class="list" href="@Url.Action("New", "Home", new { id = template.Id })">
+                <div class="list-content">
+                    <span class="list-title">@template.Title</span>
+                    <span class="list-subtitle">Description....</span>
+                    <span class="list-remark"><strong>Author:</strong>@template.Author  </span>
+                    <span class="list-remark"><strong>Creation Date:</strong>@template.CreationTime  </span>
+                </div>
+            </a>
+        }
     </div>
+</div>
 
-    @section scripts{
-        <script>
-            (function () {
-                var help = function () { alert("Do you need help?"); }
-                var options = {
-                    helpButton: { handler: help },
-                };
-
-                @foreach (var table in Model.Template.Tables)
-                {
-                    foreach(var field in table.Fields.Values)
-                    {
-                    <text>
-                    var @field.Name = new Markdown.Converter();
-                    new Markdown.Editor(@field.Name, "-@field.Name", options).run();
-                    </text>
-                    }
-                }
-            })();
-        </script>
-        <script>
-            $(function () {
-
-                var formatSelectElement = function (data) {
-                    return "" + data.text + "";
-                }
-
-
-
-                @foreach (var sele in Model.Template.Header.Fields.Where(t => t.Value.Type == FIELD_TYPE.APP_CLIENT))
-                {
-                    <text>
-                $("#@sele.Value.Name").select2({
-                    minimumInputLength: 3,
-                    ajax: {
-                        url: "/api/servers",
-                        dataType: 'json',
-                        delay: 250,
-                        type: "GET",
-                        data: function (terms) {
-                            return {
-                                hostname: terms.term,
-                                addressip: terms.term,
-                                instance: terms.term
-                            };
-                        },
-                        processResults: function (data) {
-                            return {
-                                results: $.map(data, function (val, i) {
-                                    return {
-                                        id: val.Hostname,
-                                        text: val.Hostname + " - " + val.AddressIP
-                                    }
-                                })
-                            };
-                        },
-                        cache: true
-                    },
-                    templateResult: formatSelectElement,
-                    templateSelection: formatSelectElement
-                });
-                </text>
-                }
-
-                @foreach (var sele in Model.Template.Header.Fields.Where(t => t.Value.Type == FIELD_TYPE.APP_SERVER))
-                {
-                    <text>
-                $("#@sele.Value.Name").select2({
-                    minimumInputLength: 3,
-                    //tags: true,
-                    ajax: {
-                        url: "/api/servers",
-                        dataType: 'json',
-                        delay: 250,
-                        type: "GET",
-                        data: function (terms) {
-                            return {
-                                hostname: terms.term,
-                                addressip: terms.term,
-                                instance: terms.term
-                            };
-                        },
-                        processResults: function (data) {
-                            return {
-                                results: $.map(data, function (val, i) {
-                                    return {
-                                        id: val.Hostname,
-                                        text: val.Hostname + " - " + val.AddressIP
-                                    }
-                                })
-                            };
-                        },
-                        cache: true
-                    },
-                    templateResult: formatSelectElement,
-                    templateSelection: formatSelectElement
-                });
-                </text>
-                }
-
-            });
-        </script>
-    }*@
+@section scripts{
+    <script>
+        var list_click = function (list) {
+            document.location.href = list.attr('href');
+        }
+    </script>
+}

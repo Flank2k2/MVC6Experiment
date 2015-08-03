@@ -11,31 +11,42 @@ using MVC6Experiment.Repository;
 namespace MVC6Experiment.Controllers.API
 {
     [Route("api/[controller]")]
-    public class ClientController : Controller
+    public class ClientsController : Controller
     {
         private readonly IRepository _repo;
 
-        public ClientController(IRepository repository)
+        public ClientsController(IRepository repository)
         {
             _repo = repository;
         }
 
-        [HttpGet]
-        public IEnumerable<Client> GetAll()
-        {
-            return _repo.GetAllClients();
-        }
+        //[HttpGet]
+        //public IEnumerable<Client> GetAll()
+        //{
+        //    return _repo.GetAllClients();
+        //}
 
         [HttpGet]
+        public IEnumerable<Client> Search(string hostname = "", string addressip = "", string name = "")
+        {
+            var result = _repo.SearchClients(hostname, addressip, name);
+
+            return result;
+       }
+
+
+        [HttpGet("{hostname}")]
         public IActionResult Get(string hostname)
         {
-            var client= _repo.GetClient(hostname);
+            var client = _repo.GetClient(hostname);
 
             if (client == null)
                 return HttpNotFound();
 
             return new ObjectResult(client);
         }
+        
+        
 
         // POST api/values
         [HttpPost]
@@ -46,14 +57,14 @@ namespace MVC6Experiment.Controllers.API
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(string id, [FromBody]string value)
         {
             throw new NotImplementedException("Ahaha Where are you going !?!");
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
             throw new NotImplementedException("Ahaha Where are you going !?!");
         }

@@ -6,6 +6,11 @@
     "jquery": "2.1.4",
     "jquery-validation": "1.11.1",
     "jquery-validation-unobtrusive": "3.2.2",
-      "metro": "*"
+    "metro": "*",
+    "DataTables": "*",
+    "select2": "*"
+  },
+  "resolutions": {
+    "jquery": ">=1.7.0"
   }
 }

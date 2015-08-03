@@ -3,13 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MVC6Experiment</title>
+    <title>@ViewData["Title"]</title>
 
     <environment names="Development,Staging,Production">
-        <link rel="stylesheet" href="~/css/site.css" />
-        <link rel="stylesheet" href="~/lib/metro/build/css/metro.css" >
+        <link rel="stylesheet" href="~/lib/metro/build/css/metro.css">
         <link rel="stylesheet" href="~/lib/metro/build/css/metro-icons.css">
+        <link rel="stylesheet" href="~/css/pagedown.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
+
+    <environment names="Development,Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/hammer.js/hammer.js"></script>
+        <script src="~/lib/metro/build/js/metro.js"></script>
+        <script src="~/lib/select2/dist/js/select2.js"></script>
+        <script src="~/js/pagedown.js"></script>
+    </environment>
+
 </head>
 <body>
 
@@ -45,12 +55,6 @@
         </footer>
     </div>
 
-    <environment names="Development,Staging,Production">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/hammer.js/hammer.js"></script>
-        <script src="~/lib/metro/build/js/metro.js"></script>
-    </environment>
-
     <script type="text/javascript">
 
         //jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function (arg) {
@@ -66,7 +70,7 @@
                 console.log(exception);
                 $.Notify({
                     caption: jqxhr.status,
-                    content: (data.Message) ? data.Message : data,
+                    content: (exception) ? exception : data,
                     icon: "<span class='mif-fire'></span>",
                     type: 'alert'
                 });

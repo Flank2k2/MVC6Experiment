@@ -6,6 +6,7 @@ using Microsoft.AspNet.Mvc;
 using MVC6Experiment.ViewModel;
 using Microsoft.Framework.Logging;
 using MVC6Experiment.Repository;
+using MVC6Experiment.Model;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,7 +26,7 @@ namespace MVC6Experiment.Controllers
         public IActionResult Index()
         {
             var templates = _repository.GetAllTemplates();
-            _logger.LogInformation("List all templates {count}",templates.Count());
+            _logger.LogInformation("List all templates {count}", templates.Count());
 
             var model = new IndexTemplateView()
             {
@@ -33,11 +34,6 @@ namespace MVC6Experiment.Controllers
             };
 
             return View(model);
-        }
-
-        public IActionResult New()
-        {
-            return View();
         }
 
         public IActionResult Edit(String name)
@@ -59,17 +55,35 @@ namespace MVC6Experiment.Controllers
             return View(model);
         }
 
-        public IActionResult Save(TemplateView templateView)
+        public IActionResult New()
+        {
+            _logger.LogInformation("Create empty template");
+
+            var model = new TemplateView()
+            {
+                Template = Template.DEFAULT,
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult New(TemplateView templateView)
         {
             if (ModelState.IsValid)
             {
                 var template = templateView.Template;
+                
+                template.CreationTime = DateTime.UtcNow;
+                template.Permission = Permission.GLOBAL;
+
+                if (String.IsNullOrWhiteSpace(template.Author))
+                    template.Author = "Default User";
 
                 var id = _repository.SaveTemplate(template);
 
-                return RedirectToAction("Review", new { name = id });
+                return RedirectToAction("Index");
             }
-            
+
             return View(templateView);
         }
 
